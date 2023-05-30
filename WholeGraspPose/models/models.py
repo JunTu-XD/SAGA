@@ -111,10 +111,10 @@ class MarkerNet(nn.Module):
     def dec(self, Z, cond_object, transf_transl):
 
         _, _, _, _, _, object_cond = cond_object
-        X0 = torch.cat([Z, object_cond], dim=1).float()
+        X0 = torch.cat([Z, torch.zeros_like(object_cond)], dim=1).float()
 
         X = self.dec_rb1(X0, True)
-        X_xyz = self.dec_rb2_xyz(torch.cat([X0, X, transf_transl[:, -1, None]], dim=1).float(), True)
+        X_xyz = self.dec_rb2_xyz(torch.cat([X0, X, torch.zeros_like(transf_transl[:, -1, None])], dim=1).float(), True)
         X_p = self.dec_rb2_p(torch.cat([X0, X], dim=1).float(), True)
 
         xyz_pred = self.dec_output_xyz(X_xyz)
@@ -168,7 +168,7 @@ class ContactNet(nn.Module):
         l0_points = feat_object
 
         l1_xyz, l1_points, l2_xyz, l2_points, l3_xyz, l3_points = cond_object
-
+        l1_xyz, l1_points, l2_xyz, l2_points, l3_xyz, l3_points = torch.zeros_like(l1_xyz), torch.zeros_like(l1_points), torch.zeros_like(l2_xyz), torch.zeros_like(l2_points), torch.zeros_like(l3_xyz), torch.zeros_like(l3_points)
         l3_points = torch.cat([l3_points, z], 1)
         l3_points = self.dec_drop4(F.relu(self.dec_bn4(self.dec_fc4(l3_points)), inplace=True))
         l3_points = l3_points.view(l3_points.size()[0], l3_points.size()[1], 1)

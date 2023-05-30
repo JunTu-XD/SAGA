@@ -365,7 +365,7 @@ class Trainer:
                                                             try_num=self.try_num, mode='evald')
 
                     self.cfg.best_net = makepath(os.path.join(self.cfg.work_dir, 'snapshots', 'TR%02d_E%03d_net.pt' % (self.try_num, self.epoch_completed)), isfile=True)
-                    if not epoch_num % 5:
+                    if not epoch_num % 1:
                         self.save_net()
                     self.logger(eval_msg + ' ** ')
                     self.best_loss_net = eval_loss_dict_net['loss_total']
